@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:ecommerce/controller/product_controller.dart';
 import 'package:ecommerce/utils/searchBox.dart';
 import 'package:ecommerce/utils/uicolors.dart';
+import 'package:ecommerce/views/product_description.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
@@ -81,12 +82,12 @@ class _ProductsState extends State<Products> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                // Get.to(MovieDetails(), arguments: [
-                                //   m.movieList[index].backdropPath.obs,
-                                //   m.movieList[index].originalTitle.obs,
-                                //   m.movieList[index].overview.obs,
-                                //   m.movieList[index].voteAverage.obs,
-                                // ]);
+                                Get.to(ProductDescription(), arguments: [
+                                  p.productList[index].img,
+                                  p.productList[index].name,
+                                  p.productList[index].price,
+                                  // m.movieList[index].voteAverage.obs,
+                                ]);
                               },
                               child: Container(
                                 height: 60,
