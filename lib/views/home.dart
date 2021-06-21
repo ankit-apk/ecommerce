@@ -14,7 +14,7 @@ class Home extends StatefulWidget {
 
 class _HomeState extends State<Home> {
   int _bottomNavIndex = 0;
-  List pages = [Products(), Cart(), FavouriteProducts(), AccountInfo()];
+  List pages = [Products(), FavouriteProducts(), Cart(), AccountInfo()];
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,8 +28,8 @@ class _HomeState extends State<Home> {
       bottomNavigationBar: AnimatedBottomNavigationBar(
         icons: [
           Icons.home_filled,
-          Icons.shopping_cart,
           Icons.favorite,
+          Icons.feed,
           Icons.account_circle_sharp
         ],
         activeIndex: _bottomNavIndex,

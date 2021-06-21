@@ -1,12 +1,16 @@
 import 'dart:async';
-
+import 'package:ecommerce/controller/auth_controller.dart';
 import 'package:ecommerce/utils/uicolors.dart';
-import 'package:ecommerce/views/home.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading_animations/loading_animations.dart';
+import 'package:get_storage/get_storage.dart';
+import 'package:rive/rive.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -15,6 +19,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
+      defaultTransition: Transition.upToDown,
       home: SplashScreen(),
     );
   }
@@ -26,13 +31,14 @@ class SplashScreen extends StatefulWidget {
 }
 
 class _SplashScreenState extends State<SplashScreen> {
+  AuthController authController = Get.put(AuthController());
   startTime() async {
     var duration = Duration(seconds: 3);
     return Timer(duration, home);
   }
 
   home() {
-    Get.offAll(Home());
+    Get.offAll(authController.pageProvider());
   }
 
   @override
@@ -44,43 +50,68 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: UiColors.splashColor,
       body: SafeArea(
-        child: Wrap(
-          direction: Axis.horizontal,
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(top: 46.0),
-              child: Center(
-                child: Text(
-                  "ClothY",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQuery.of(context).size.height * 0.040,
-                    color: UiColors.buttonColors,
+        child: SingleChildScrollView(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(top: 46.0),
+                child: Center(
+                  child: Text(
+                    "FoodY",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: MediaQuery.of(context).size.height * 0.040,
+                      color: UiColors.textColor,
+                    ),
                   ),
                 ),
               ),
-            ),
-            Image.asset('assets/splash.png'),
-            Padding(
-              padding: const EdgeInsets.only(
-                  left: 16.0, right: 16.0, top: 30, bottom: 30),
-              child: Center(
-                child: Text(
-                  "Cool Outfits for ColthY You",
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: MediaQuery.of(context).size.height * 0.030,
-                    color: Colors.black,
+              Padding(
+                padding: const EdgeInsets.only(
+                    left: 16.0, right: 16.0, top: 30, bottom: 00),
+                child: Center(
+                  child: Text(
+                    "Foods that eat hunger!",
+                    style: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      fontSize: MediaQuery.of(context).size.height * 0.030,
+                      color: UiColors.textColor,
+                    ),
                   ),
                 ),
               ),
-            ),
-            LoadingFilling.square(
-              borderColor: UiColors.buttonColors,
-              fillingColor: UiColors.buttonColors,
-            )
-          ],
+              Container(
+                child: RiveAnimation.asset(
+                  'assets/hand.riv',
+                  // fit: BoxFit.fill,
+                ),
+                height: MediaQuery.of(context).size.height / 0.8,
+                width: MediaQuery.of(context).size.width,
+              ),
+              // Image.asset('assets/splash.png'),
+              // Padding(
+              //   padding: const EdgeInsets.only(
+              //       left: 16.0, right: 16.0, top: 30, bottom: 30),
+              //   child: Center(
+              //     child: Text(
+              //       "Foods that eat hunger!",
+              //       style: TextStyle(
+              //         fontWeight: FontWeight.bold,
+              //         fontSize: MediaQuery.of(context).size.height * 0.030,
+              //         color: UiColors.textColor,
+              //       ),
+              //     ),
+              //   ),
+              // ),
+              // LoadingFilling.square(
+              //   borderColor: UiColors.buttonColors,
+              //   fillingColor: UiColors.buttonColors,
+              // )
+            ],
+          ),
         ),
       ),
     );

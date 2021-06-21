@@ -1,10 +1,10 @@
+import 'dart:convert';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/controller/product_controller.dart';
+import 'package:ecommerce/controller/firebase_productController.dart';
 import 'package:ecommerce/utils/searchBox.dart';
 import 'package:ecommerce/utils/uicolors.dart';
 import 'package:ecommerce/views/product_description.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:get/get.dart';
 
 class Products extends StatefulWidget {
@@ -13,21 +13,22 @@ class Products extends StatefulWidget {
 }
 
 class _ProductsState extends State<Products> {
-  ProductController p = Get.put(ProductController());
+  // ProductController p = Get.put(ProductController());
+  FirebaseProdutController products = Get.put(FirebaseProdutController());
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Obx(
         () => SafeArea(
           child: SingleChildScrollView(
-            child: Wrap(
-              direction: Axis.horizontal,
+            child: Column(
+              // direction: Axis.horizontal,
               children: [
-                Padding(
-                  padding:
-                      const EdgeInsets.only(top: 20.0, left: 30, right: 30),
-                  child: buildContainer(),
-                ),
+                // Padding(
+                //   padding:
+                //       const EdgeInsets.only(top: 20.0, left: 30, right: 30),
+                //   child: buildContainer(),
+                // ),
                 AspectRatio(
                   aspectRatio: 16 / 9,
                   child: Padding(
@@ -40,7 +41,7 @@ class _ProductsState extends State<Products> {
                           placeholder: (context, url) =>
                               Image.asset('assets/placeholder.png'),
                           imageUrl:
-                              'https://images.pexels.com/photos/2853909/pexels-photo-2853909.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
+                              'https://images.pexels.com/photos/1854652/pexels-photo-1854652.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=650&w=940',
                           fit: BoxFit.cover,
                         ),
                       ),
@@ -60,17 +61,18 @@ class _ProductsState extends State<Products> {
                 SizedBox(
                   height: 24,
                 ),
-                p.isLoading.value
+                products.status.value
                     ? Container(
                         child: Center(
-                            child: CircularProgressIndicator(
-                          color: UiColors.buttonColors,
-                        )),
+                          child: CircularProgressIndicator(
+                            color: UiColors.buttonColors,
+                          ),
+                        ),
                       )
                     : Padding(
                         padding: const EdgeInsets.all(12.0),
                         child: GridView.builder(
-                          itemCount: p.productList.length,
+                          itemCount: products.productList.length,
                           physics: BouncingScrollPhysics(),
                           shrinkWrap: true,
                           gridDelegate:
@@ -82,12 +84,19 @@ class _ProductsState extends State<Products> {
                           itemBuilder: (context, index) {
                             return GestureDetector(
                               onTap: () {
-                                Get.to(ProductDescription(), arguments: [
-                                  p.productList[index].img,
-                                  p.productList[index].name,
-                                  p.productList[index].price,
-                                  // m.movieList[index].voteAverage.obs,
-                                ]);
+                                Get.to(
+                                  ProductDescription(),
+                                  arguments: [
+                                    products.productList[index]['imageLink'],
+                                    products.productList[index]['product_name'],
+                                    products.productList[index]
+                                        ['product_price'],
+                                    products.productList[index]
+                                        ['product_description'],
+                                    products.productList[index]
+                                        ['product_quantity'],
+                                  ],
+                                );
                               },
                               child: Container(
                                 height: 60,
@@ -107,13 +116,18 @@ class _ProductsState extends State<Products> {
                                             width: MediaQuery.of(context)
                                                 .size
                                                 .width,
-                                            child: CachedNetworkImage(
-                                              imageUrl:
-                                                  p.productList[index].img,
-                                              fit: BoxFit.cover,
-                                              placeholder: (context, url) =>
-                                                  Image.asset(
-                                                      'assets/placeholder.png'),
+                                            // child: CachedNetworkImage(
+                                            //   imageUrl:
+                                            //       p.productList[index].img,
+                                            //   fit: BoxFit.cover,
+                                            //   placeholder: (context, url) =>
+                                            //       Image.asset(
+                                            //           'assets/placeholder.png'),
+                                            // ),
+                                            child: Image.memory(
+                                              base64Decode(
+                                                  products.productList[index]
+                                                      ['imageLink']),
                                             ),
                                           ),
                                         ),
@@ -132,7 +146,8 @@ class _ProductsState extends State<Products> {
                                           child: Align(
                                               alignment: Alignment.bottomCenter,
                                               child: Text(
-                                                p.productList[index].name,
+                                                products.productList[index]
+                                                    ['product_name'],
                                                 style: TextStyle(
                                                     color:
                                                         UiColors.searchBoxColor,
