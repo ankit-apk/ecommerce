@@ -1,11 +1,8 @@
 import 'dart:convert';
-
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:ecommerce/controller/cart_controller.dart';
-import 'package:ecommerce/utils/uicolors.dart';
+import 'package:ecommerce/controller/feeds_controller.dart';
+import 'package:ecommerce/views/feed_detail.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 
 class Cart extends StatefulWidget {
   @override
@@ -13,57 +10,52 @@ class Cart extends StatefulWidget {
 }
 
 class _CartState extends State<Cart> {
-  CartController c = Get.put(CartController());
-  GetStorage cartBox = GetStorage();
+  FeedsController feedCont = Get.put(FeedsController());
 
   @override
   Widget build(BuildContext context) {
-    List? products = cartBox.read('cart') == null
-        ? List.empty(growable: true)
-        : cartBox.read('cart');
     return Scaffold(
-      body: SafeArea(
-        child: ListView.builder(
-          itemCount: products!.length,
-          itemBuilder: (context, index) {
-            return Container(
-              height: MediaQuery.of(context).size.height / 4,
-              child: Padding(
+      body: Obx(
+        () => SafeArea(
+          child: ListView.builder(
+            itemCount: feedCont.feedList.length,
+            itemBuilder: (context, index) {
+              return Padding(
                 padding: const EdgeInsets.all(8.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    AspectRatio(
-                      aspectRatio: 8 / 12,
-                      child: Container(
-                        width: MediaQuery.of(context).size.width,
-                        // child: CachedNetworkImage(
-                        //   imageUrl: c.cartList[index][0],
-                        //   fit: BoxFit.cover,
-                        //   placeholder: (context, url) =>
-                        //       Image.asset('assets/placeholder.png'),
-                        // ),
-                        child: Image.memory(
-                          base64Decode(products[index][0]),
-                          fit: BoxFit.cover,
+                child: GestureDetector(
+                  onTap: () {
+                    Get.to(FeedDetail(), arguments: feedCont.feedList[index]);
+                  },
+                  child: Card(
+                    elevation: 5,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        AspectRatio(
+                          aspectRatio: 16 / 9,
+                          child: Image.memory(
+                            base64Decode(
+                              feedCont.feedList[index]['imageLink'],
+                            ),
+                            fit: BoxFit.cover,
+                          ),
                         ),
-                      ),
+                        Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            feedCont.feedList[index]['product_name'],
+                            style: TextStyle(
+                                fontSize:
+                                    MediaQuery.of(context).size.height * 0.022),
+                          ),
+                        )
+                      ],
                     ),
-                    Text(c.cartList[index][1]),
-                    Text(c.cartList[index][2]),
-                    ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor: MaterialStateProperty.all(
-                                UiColors.buttonColors)),
-                        onPressed: () {
-                          c.cartList.removeAt(index);
-                        },
-                        child: Icon(Icons.delete))
-                  ],
+                  ),
                 ),
-              ),
-            );
-          },
+              );
+            },
+          ),
         ),
       ),
     );

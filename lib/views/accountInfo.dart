@@ -38,6 +38,7 @@ class _AccountInfoState extends State<AccountInfo> {
                     _authController.logout();
                   },
                   style: ButtonStyle(
+                      elevation: MaterialStateProperty.all(0),
                       shape: MaterialStateProperty.all(
                         RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20),

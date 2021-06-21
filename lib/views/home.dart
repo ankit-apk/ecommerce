@@ -1,4 +1,5 @@
 import 'package:animated_bottom_navigation_bar/animated_bottom_navigation_bar.dart';
+import 'package:ecommerce/controller/favourite_controller.dart';
 import 'package:ecommerce/utils/uicolors.dart';
 import 'package:ecommerce/views/accountInfo.dart';
 import 'package:ecommerce/views/cart.dart';
@@ -6,6 +7,7 @@ import 'package:ecommerce/views/favouriteProducts.dart';
 import 'package:ecommerce/views/products.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 
 class Home extends StatefulWidget {
   @override
@@ -13,6 +15,7 @@ class Home extends StatefulWidget {
 }
 
 class _HomeState extends State<Home> {
+  FavouritesController favController = Get.put(FavouritesController());
   int _bottomNavIndex = 0;
   List pages = [Products(), FavouriteProducts(), Cart(), AccountInfo()];
   @override
@@ -20,8 +23,10 @@ class _HomeState extends State<Home> {
     return Scaffold(
       floatingActionButton: FloatingActionButton(
         backgroundColor: UiColors.buttonColors,
-        child: Icon(FontAwesomeIcons.shopify),
-        onPressed: () {},
+        child: Icon(FontAwesomeIcons.whatsapp),
+        onPressed: () {
+          favController.launchWhatsapp('Your Products');
+        },
         //params
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,

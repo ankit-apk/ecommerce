@@ -34,7 +34,7 @@ class _FavouriteProductDescriptionState
         child: Align(
           alignment: Alignment.bottomCenter,
           child: Padding(
-            padding: const EdgeInsets.only(left: 50.0),
+            padding: const EdgeInsets.only(left: 45.0),
             child: Container(
               width: MediaQuery.of(context).size.width / 2,
               height: MediaQuery.of(context).size.height / 12,

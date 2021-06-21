@@ -126,8 +126,10 @@ class _ProductsState extends State<Products> {
                                             // ),
                                             child: Image.memory(
                                               base64Decode(
-                                                  products.productList[index]
-                                                      ['imageLink']),
+                                                products.productList[index]
+                                                    ['imageLink'],
+                                              ),
+                                              fit: BoxFit.fill,
                                             ),
                                           ),
                                         ),
